@@ -16,22 +16,22 @@ func main() {
 		fmt.Scan(&cmd)
 		switch cmd {
 		case "roll":
-			dice := get_rand()
+			dice := rollDice()
 			sum += dice
 			history = append(history, dice)
 			tmp = make([]int, 0)
-			fmt.Println("got: " + fmt.Sprint(dice) + "!")
+			fmt.Println("got " + fmt.Sprint(dice) + "!")
 		case "undo":
 			if len(history) > 0 {
 				sum -= history[len(history)-1]
-				move_last_elm(&tmp, &history)
+				moveLastElm(&history, &tmp)
 			} else {
 				fmt.Println("cant undo any more!")
 			}
 		case "redo":
 			if len(tmp) > 0 {
 				sum += tmp[len(tmp)-1]
-				move_last_elm(&history, &tmp)
+				moveLastElm(&tmp, &history)
 			} else {
 				fmt.Println("cant redo any more!")
 			}
@@ -45,13 +45,13 @@ func main() {
 	}
 }
 
-func get_rand() int {
+func rollDice() int {
 	seed := time.Now().UnixNano()
 	rand.Seed(seed)
 	return rand.Intn(6) + 1
 }
 
-func move_last_elm(a *[]int, b *[]int) {
-	*a = append(*a, (*b)[len(*b)-1])
-	*b = (*b)[:len(*b)-1]
+func moveLastElm(from *[]int, to *[]int) {
+	*to = append(*to, (*from)[len(*from)-1])
+	*from = (*from)[:len(*from)-1]
 }
